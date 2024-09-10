@@ -81,6 +81,12 @@ echo -e "\nSwitching back to default branch [$original_branch]"
 git checkout "$original_branch"
 gh repo edit --default-branch "$original_branch"
 
+# Disable workflows
+gh workflow list --json id | jq -r '.[] | .id' | while read -r workflow_id; do
+  echo "Disabling workflow with ID: $workflow_id"
+  gh workflow disable "$workflow_id"
+done
+
 # Clean up
 cd "$start_dir"
 
